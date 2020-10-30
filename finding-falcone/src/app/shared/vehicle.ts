@@ -1,4 +1,4 @@
-export interface Vehicle{
+export class Vehicle{
   name: string;
   total_no: number;
   max_distance: number;

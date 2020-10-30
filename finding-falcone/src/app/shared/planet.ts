@@ -1,4 +1,4 @@
-export interface Planet{
+export class Planet{
   name: string;
   distance: number;
 }

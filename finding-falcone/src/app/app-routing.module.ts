@@ -2,13 +2,17 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { FindingFalconeComponent } from './components/finding-falcone/finding-falcone.component';
 
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  // { path: 'find', component: FindComponent },
-  // { path: 'result', component: ResultComponent },
+  {
+    path: '', redirectTo: '/home', pathMatch: 'full'
+  },
+  { path: 'home', component: HomeComponent },
+  {path: 'findingFalcone' , component: FindingFalconeComponent},
+
   { path: '**', component: NotfoundComponent }
 ];
 
