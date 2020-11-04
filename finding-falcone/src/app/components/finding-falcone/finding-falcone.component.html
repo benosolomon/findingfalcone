@@ -1,12 +1,166 @@
-{{ planets | json }}
+<div fxFlex>
+  <div fxLayout="column" fxLayoutGap="10px">
+    <div class="intro" fxLayoutAlign="center center" fxLayoutGap="10PX">
+      <div>
+        <h2 class="text-center">Select any 4 Planets and Vehicles you want to search</h2>
+      </div>
+    </div>
+    <div class="intro" fxLayoutAlign="center center" fxLayoutGap="10PX" *ngIf="distanceCovered">
+      <div>
+        <h2 class="text-center">Total time to reach all the planet: {{ distanceCovered }}</h2>
+      </div>
+    </div>
+    <div *ngIf="!responseRecieved" fxLayoutAlign="center center">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div fxFLex="90" *ngIf="responseRecieved">
+      <div fxLayoutAlign="center center">
+        <button mat-raised-button color="primary" (click)="resetGame()">Reset</button>
+      </div>
+      <br />
+      <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px" fxLayoutGap.lt-md="10px"
+        fxLayoutAlign="center center" fxLayoutAlign.lt-md="center">
+        <mat-card class="mat-elevation-z3" fxFlex="20" fxFlex.lt-md="85">
+          <mat-card-header>
+            <mat-card-title fxLayoutAlign="center center">
+              <p>Planet - 1</p>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content fxLayoutAlign="center center">
+            <div class="example-form">
+              <div fxLayoutAlign="center center">
+                <img src='./assets/{{ isFirstPlanetOpen ? firstCtrl?.value : "planet-not-selected"}}.png' width="100px"
+                  height="100px">
+              </div>
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Enter Planet 1" [matAutocomplete]="auto1" [formControl]="firstCtrl">
+                <mat-autocomplete #auto1="matAutocomplete">
+                  <mat-option *ngFor="let data of filteredFirstCtrl | async" [value]="data.name">
+                    <span>{{data.name}}</span> |
+                    <small>Distance: {{data.distance}}</small>
+                  </mat-option>
+                </mat-autocomplete>
 
-{{  planeterrMessage | json}}
-<mat-divider></mat-divider>
+              </mat-form-field>
+              <ng-container *ngIf="isFirstPlanetOpen">
+                <mat-selection-list #data1 [multiple]="false" (selectionChange)="onFirstSelection($event)">
+                  <mat-list-option *ngFor="let data of vehicles" [value]="data" [disabled]="checkDisable(data,'first')">
+                    {{ data.name }} ({{ data.total_no}})
+                  </mat-list-option>
+                </mat-selection-list>
+              </ng-container>
 
+              <br>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z3" fxFlex="20" fxFlex.lt-md="85">
+          <mat-card-header>
+            <mat-card-title fxLayoutAlign="center center">
+              <p>Planet - 2</p>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content fxLayoutAlign="center center">
+            <div class="example-form">
+              <div fxLayoutAlign="center center">
+                <img src='./assets/{{ isSecondPlanetOpen ? secondCtrl?.value : "planet-not-selected"}}.png'
+                  width="100px" height="100px">
+              </div>
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Enter Planet 2" [matAutocomplete]="auto2" [formControl]="secondCtrl">
+                <mat-autocomplete #auto2="matAutocomplete">
+                  <!-- <mat-option *ngIf="!isSecondPlanetOpen">No data Found</mat-option> -->
+                  <mat-option *ngFor="let data of filteredSecondCtrl | async" [value]="data.name">
+                    <!-- <img class="example-option-img" aria-hidden [src]="state.flag" height="25"> -->
+                    <span>{{data.name}}</span> |
+                    <small>Distance: {{data.distance}}</small>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <ng-container *ngIf="isSecondPlanetOpen">
+                <mat-selection-list #data2 [multiple]="false" (selectionChange)="onSecondSelection($event)">
+                  <mat-list-option *ngFor="let data of vehicles" [value]="data"
+                    [disabled]="checkDisable(data,'second')">
+                    {{ data.name }} ({{ data.total_no}})
+                  </mat-list-option>
+                </mat-selection-list>
 
-{{ vehicleerrMessage | json }}
-{{ vehicles | json }}
+              </ng-container>
+              <br>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mat-elevation-z3" fxFlex="20" fxFlex.lt-md="85">
+          <mat-card-header>
+            <mat-card-title fxLayoutAlign="center center">
+              <p>Planet - 3</p>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content fxLayoutAlign="center center">
+            <div class="example-form">
+              <div fxLayoutAlign="center center">
+                <img src='./assets/{{ isThirdPlanetOpen ? thirdCtrl?.value : "planet-not-selected"}}.png' width="100px"
+                  height="100px">
+              </div>
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Enter Planet 3" [matAutocomplete]="auto3" [formControl]="thirdCtrl">
+                <mat-autocomplete #auto3="matAutocomplete">
+                  <!-- <mat-option *ngIf="!isThirdPlanetOpen">No data Found</mat-option> -->
+                  <mat-option *ngFor="let data of filteredThirdCtrl | async" [value]="data.name">
+                    <!-- <img class="example-option-img" aria-hidden [src]="state.flag" height="25"> -->
+                    <span>{{data.name}}</span> |
+                    <small>Distance: {{data.distance}}</small>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <ng-container *ngIf="isThirdPlanetOpen">
+                <mat-selection-list #dat3 [multiple]="false" (selectionChange)="onThirdSelection($event)">
+                  <mat-list-option *ngFor="let data of vehicles" [value]="data" [disabled]="checkDisable(data,'third')">
+                    {{ data.name }} ({{ data.total_no}})
+                  </mat-list-option>
+                </mat-selection-list>
+              </ng-container>
 
-<mat-divider></mat-divider>
-
-{{  token | json  }}
+              <br>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <!-- {{ data1.selectedOptions.selected[0]?.value }} -->
+        <mat-card class="mat-elevation-z3" fxFlex="20" fxFlex.lt-md="85">
+          <mat-card-header>
+            <mat-card-title fxLayoutAlign="center center">
+              <p>Planet - 4</p>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content fxLayoutAlign="center center">
+            <div class="example-form">
+              <div fxLayoutAlign="center center">
+                <img src='./assets/{{ isFourthPlanetOpen ? fourthCtrl?.value : "planet-not-selected"}}.png'
+                  width="100px" height="100px">
+              </div>
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Enter Planet 4" [matAutocomplete]="auto4" [formControl]="fourthCtrl">
+                <mat-autocomplete #auto4="matAutocomplete">
+                  <!-- <mat-option *ngIf="!isFourthPlanetOpen">No data Found</mat-option> -->
+                  <mat-option *ngFor="let data of filteredFourthCtrl | async" [value]="data.name">
+                    <span>{{data.name}}</span> |
+                    <small>Distance: {{data.distance}}</small>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <ng-container *ngIf="isFourthPlanetOpen">
+                <mat-selection-list #data4 [multiple]="false" (selectionChange)="onFourthSelection($event)">
+                  <mat-list-option *ngFor="let data of vehicles" [value]="data"
+                    [disabled]="checkDisable(data,'fourth')">
+                    {{ data.name }} ({{ data.total_no}})
+                  </mat-list-option>
+                </mat-selection-list>
+              </ng-container>
+              <br>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
